@@ -1,0 +1,19 @@
+#!/bin/bash
+echo "Welcome $USER"
+echo "enter the month in full that you want to view: "
+read DATEE
+echo "enter the year you want to view: "
+read YEAR
+
+case "$DATEE" in 
+	"April"|"June"|"September"|"November") 
+		echo "This month of $DATEE has 30 days and the year is $YEAR ";;
+	"February")
+		if (( $YEAR % 400 == 0 )) || (( ($YEAR % 4 == 0) && ($YEAR % 100 != 0) )); then
+		echo "The year of $YEAR is a leap year"
+		else
+		echo "The year of $YEAR is no a leap year"
+		fi;;
+	*)
+		echo "This month $DATEE has 31 days";;
+esac
