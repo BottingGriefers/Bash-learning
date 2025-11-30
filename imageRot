@@ -1,0 +1,18 @@
+#!/bin/bash
+echo "welcome this is a image rotator"
+echo -n "enter your image here: "
+read PICINPUT
+echo -n "Do you want to -leftright or -topbottom OR BOTH?: "
+read FLIPPING
+echo -n "how many degrees do you want to rotate it 1-180?: "
+read ROTATE
+echo -n "What would you call your new file?: "
+read FILE
+pngtopnm $PICINPUT |
+pnmflip $FLIPPING |
+pnmrotate $ROTATE |
+pnmtopng > $FILE.png
+
+echo "its done check your dir"
+pwd
+
