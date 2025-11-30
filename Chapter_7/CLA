@@ -1,0 +1,22 @@
+#!/bin/bash
+if [ $# != 1 ]; then
+echo "error: you must provide the year and only that as an argument"
+echo "Like this: ./CLA <year>"
+exit 1
+fi
+echo "Welcome home $USER"
+YEAR=$1
+echo "Enter the month you wish to view:" 
+read DATEE
+
+case $DATEE in 
+"April"|"June"|"September"|"November")
+echo "This month of $DATEE has 30 days of the year $YEAR";;
+"February")
+if (( $YEAR % 400 == 0 )) || (( ($YEAR % 4 == 0) && ($YEAR % 100 != 0) )); then
+echo "The year of $YEAR is a leap year"
+else
+echo "The year of $YEAR aint a leap year BUDDY"
+fi;;*)
+echo "This month $DATEE has 31 days";;
+esac
