@@ -1,0 +1,34 @@
+#!/bin/bash
+
+if [ "$#" -ne 1 ]; then
+echo "only 1 argument <filename>"
+exit 1
+fi
+FILE="$1"
+
+
+
+cat << CHOICES
+1. gzip
+2. bzip2
+3. compress
+4. zip
+5. Rage Quit
+what is your choice kind person 1-5: 
+CHOICES
+read CHOICE 
+case $CHOICE in
+1) echo "You chose gzip"
+gzip $FILE ;;
+
+2) echo "You chose bzip2"
+bzip2 $FILE;;
+
+3) echo "you chose compress";;
+
+4) echo "you chose Zip";;
+zip $FILE.zip $FILE
+
+5) echo "you chose to Rage Quit"
+exit 1 ;;
+esac
