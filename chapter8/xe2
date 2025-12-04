@@ -1,0 +1,31 @@
+#!/bin/bash
+clear
+if [ "$#" -ne 0 ]; then
+echo "NO ARGUMENTS PLEASE"
+exit 1
+fi
+
+
+REQUIRED_SPACE=$(du -sk "/var/backups.tar" | cut -f1)
+AVAILABLE_SPACE=$(df -Pk "/home/vbot" | tail -1 | awk '{print $4}')
+
+echo "Required:  ${REQUIRED_SPACE} KB"
+echo "Available: ${AVAILABLE_SPACE} KB"
+
+echo "y/n"
+read YESORNO
+case "$YESORNO" in
+y)
+ 
+if [[ "$AVAILABLE_SPACE" -gt "$REQUIRED_SPACE" ]]; then
+sudo tar -cvpf "/var/backups.tar" "/home/vbot"
+clear
+echo "✅ You backup is complete"
+else
+    echo "❌ Error: Not enough disk space."
+    echo "Need ${REQUIRED_SPACE} KB, but only have ${AVAILABLE_SPACE} KB."
+    exit 1
+fi;;
+n) exit 1;;
+*) echo "only y and n buddy";;
+esac

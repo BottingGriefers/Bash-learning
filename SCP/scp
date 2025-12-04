@@ -1,0 +1,16 @@
+#!/bin/bash
+SOURCE_DIR="$HOME"
+LOG_FILE="$HOME/log/homebackup.log"
+DEST_DIR="/tmp/my_backup_folder"
+mkdir -p "$(dirname "$LOG_FILE")"
+echo "Starting backup at $(date)" >> "$LOG_FILE"
+scp -r -q "$SOURCE_DIR" "vbot@192.168.57.3:${DEST_DIR}" 2>> "$LOG_FILE"
+if [ $? -eq 0 ]; then
+    SUCCESS_MSG="$(date): Backup successful. Files copied to $REMOTE_HOST:$DEST_DIR"
+    echo "$SUCCESS_MSG" >> "$LOG_FILE"
+    echo "Backup Complete! Check $LOG_FILE"
+else
+    FAIL_MSG="$(date): Backup FAILED. See above error details."
+    echo "$FAIL_MSG" >> "$LOG_FILE"
+    echo "Backup Failed! Check $LOG_FILE"
+fi
