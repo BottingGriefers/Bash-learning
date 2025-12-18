@@ -1,0 +1,36 @@
+#!/bin/bash
+update() {
+if command -v apt; then
+echo "Updating Ubuntu"
+sudo apt update && sudo apt upgrade -y
+elif command -v dnf; then
+echo "Updating dnf" 
+sudo dnf upgrade -y
+if command -v pacman; then
+elif "Updating arch"
+sudo pacman -Syu -y
+else
+echo "Idk what shitty os you are using"
+exit 1
+fi
+}
+
+#---#
+
+ssh() {
+if ! command -v sshd; then
+echo "installing ssh"
+if command -v apt; then
+sudo apt install openssh-server -y
+sudo systemctl enable --now ssh
+elif command -v dnf; then
+sudo dnf install openssh-server -y
+sudo systemctl enable --now sshd
+elif command -v pacman; then
+sudo pacman -S openssh
+sudo systemctl enable --now sshd
+else echo "You already have it installed"
+
+#---#
+
+
