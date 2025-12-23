@@ -1,4 +1,14 @@
 #!/bin/bash
+CAT << "meowi" 
+  1       1 
+ 1 1     1 1
+1   11111   1
+1   0   0   1
+1     1     1
+ 11111111111 
+welcome to the systems settings we will be done shortly
+meowi
+
 update() {
 if command -v apt; then
 echo "Updating Ubuntu"
@@ -6,11 +16,11 @@ sudo apt update && sudo apt upgrade -y
 elif command -v dnf; then
 echo "Updating dnf" 
 sudo dnf upgrade -y
-if command -v pacman; then
-elif "Updating arch"
-sudo pacman -Syu -y
+elif command -v pacman; then
+echo "updating arch"
+sudo pacman -Syu --noconfirm
 else
-echo "Idk what shitty os you are using"
+echo "Idk what horrible os you are using"
 exit 1
 fi
 }
@@ -27,10 +37,68 @@ elif command -v dnf; then
 sudo dnf install openssh-server -y
 sudo systemctl enable --now sshd
 elif command -v pacman; then
-sudo pacman -S openssh
+sudo pacman -S openssh --noconfirm
 sudo systemctl enable --now sshd
 else echo "You already have it installed"
+}
 
 #---#
+#SECTION 3!!!
+#---#
 
+firewalld() { 
+if command -v ufw; then
+sudo ufw status 
+sudo ufw disable
+if command -v iptables; then
+systemctl status iptables
+sudo systemctl stop iptables
+fi
+fi
+if ! command -v firewalld; then
+echo "installing firewall"
+if command -v apt; then 
+sudo apt install firewalld -y
+elif command -dnf; then
+sudo dnf install firewalld -y
+elif command -pacman; then
+sudo pacman -S firewalld --noconfirm
+else CAT << "meowi" 
+  1       1
+ 1 1     1 1
+1   11111   1
+1   0   0   1
+1     1     1
+ 11111111111
+meowi
+fi
+
+sudo systemctl enable --now firewalld 
+#this flag allows us to write a rule to xml confi file cd '/etc/firewalld/zones/block.xml" instead of re running it all the time?
+sudo firewall-cmd --permanent --zone=block --add-service=ssh && \
+#syncs the disk with the RAM
+sudo firewall-cmd --reload && \
+sudo firewall-cmd --set-default-zone=block
+sudo firewall-cmd --list-all
+ping -c 3 cats.com
+echo "IT WORKS!!!"
+
+#---#
+#SECTION 5!!!
+#---#
+
+# Created a variable that limit only 5 users to access docker, why because security reasons, also the | paste is important because it feeds the gpasswd like it wants to like (name), (name), otherwise it wont understand it
+# the numbers >= is if anything is higher than 1000 its a user and < 60k is  smth like nobody user? it will allow THAT user to be in our docker group
+limit_list=$(awk -F: '$3 >= 1000 && $3 < 60000 {print $1}' /etc/passwd | tail -n 5 | paste -sd "," -)
+finallist="${limit_list},${USER}"
+sudo gpasswd -M "$finallist" docker
+meowi << EOF 
+  1       1 
+ 1 1     1 1
+1   11111   1
+1   0   0   1
+1     1     1
+ 11111111111 
+ONLY $finallist has access
+EOF
 
