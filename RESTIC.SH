@@ -4,7 +4,8 @@ USERR="$USER"
 HOMEDIR="$HOME"
 RESTIC_BIN=$(command -v restic)
 RESTIC_REPO="sftp://$REMOTEHOST:/home/$USERR/BACKIES"
-
+read -p "Enter password please and do not forget: " RESTICPASS
+export RESTIC_PASSWORD="$RESTICPASS"
 #-ssh-#
 
 if [ ! -f "$HOMEDIR/.ssh/id_ed25519" ]; then
@@ -14,9 +15,9 @@ ssh-copy-id "$REMOTEHOST"
 #-----#
 
 #-restic-cfg-#
-if ! $RESTIC_BIN --insecure-no-password -r "$RESTIC_REPO" snapshots; then
+if ! $RESTIC_BIN -r "$RESTIC_REPO" snapshots; then
 echo "restic repository."
-$RESTIC_BIN --insecure-no-password -r "$RESTIC_REPO" init
+$RESTIC_BIN -r "$RESTIC_REPO" init
 fi
 #---#
 
@@ -28,7 +29,8 @@ Description=Restic backup
 Type=oneshot
 User=$USERR
 WorkingDirectory=$HOMEDIR
-ExecStart=$RESTIC_BIN --insecure-no-password -r $RESTIC_REPO backup .
+Environment="RESTIC_PASSWORD=$RESTICPASS"
+ExecStart=$RESTIC_BIN -r $RESTIC_REPO backup .
 DOS
 sudo tee /etc/systemd/system/restic.timer <<DIS
 [Unit]
